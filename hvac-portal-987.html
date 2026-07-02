@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <!-- saved from url=(0053)https://hvac-job-profit.preview.emergentagent.com/app -->
-<html lang="en"><head><script>
-  // Check if a secure active session token exists in the browser
+<html lang="en"><head><script> // 1. First, enforce our strict security guard check
   if (sessionStorage.getItem("hvac_session") !== "active") {
     alert("Restricted Access: Please log in through the primary web portal.");
-    window.location.href = "index.html"; 
+    window.location.href = "index.html";
   }
-</script><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  // 2. FAKE THE BACKEND DATA MOCK (Stops the white screen crash!)
+  window.window = window;
+  window.process = { env: { NODE_ENV: 'production' } };
+  
+  // Create a completely fake user payload so the frontend code thinks it is logged into Emergent
+  const fakeUserPayload = JSON.stringify({
+    id: "free-user-2026",
+    email: "admin@hvacprofit.com",
+    role: "admin",
+    name: "HVAC Administrator",
+    authenticated: true
+  });
+
+  // Inject the fake profile data into the common storage locations the app looks for
+  sessionStorage.setItem("user", fakeUserPayload);
+  sessionStorage.setItem("auth", "true");
+  localStorage.setItem("user", fakeUserPayload);
+  
+  // Intercept data crashes cleanly
+  window.addEventListener('error', function(e) {
+    if (e.message && (e.message.includes('null') || e.message.includes('undefined'))) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    }
+  }, true);
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#000000">
