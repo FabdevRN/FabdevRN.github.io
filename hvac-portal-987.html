@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <!-- saved from url=(0053)https://hvac-job-profit.preview.emergentagent.com/app -->
 <html lang="en"><head><script>
-  const cameFromLogin = document.referrer.includes("pages.dev") || document.referrer.includes("github.io");
-  if (!cameFromLogin) {
+  // Check if a secure active session token exists in the browser
+  if (sessionStorage.getItem("hvac_session") !== "active") {
     alert("Restricted Access: Please log in through the primary web portal.");
     window.location.href = "index.html"; 
   }
-</script>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</script><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#000000">
