@@ -2911,5 +2911,29 @@ input[type="number"] {
   window.addEventListener('DOMContentLoaded', wipeBadge);
   window.addEventListener('load', wipeBadge);
   setInterval(wipeBadge, 300);
+</script><script>
+  (function() {
+    const targetText = 'Made with Emergent';
+    const checkAndKill = (node) => {
+      if (node.nodeType === 1) {
+        if (node.shadowRoot) {
+          observeChanges(node.shadowRoot);
+          node.shadowRoot.querySelectorAll('*').forEach(checkAndKill);
+        }
+        if (node.matches('a[href*="emergent.sh"], [id*="badge"], [class*="badge"]') || node.textContent.includes(targetText)) {
+          node.remove();
+        }
+      }
+    };
+    const observeChanges = (root) => {
+      new MutationObserver((mutations) => {
+        for (let m of mutations) {
+          m.addedNodes.forEach(checkAndKill);
+        }
+      }).observe(root, { childList: true, subtree: true });
+    };
+    observeChanges(document.documentElement);
+    document.querySelectorAll('*').forEach(checkAndKill);
+  })();
 </script>
 </body></html>
